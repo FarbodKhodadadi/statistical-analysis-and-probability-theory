@@ -1,0 +1,182 @@
+1-1)Explanations , charts and results ... is in the PDF file
+```{r}
+set.seed(545)
+x <- rhyper(150,20,80,40)
+hist(x ,breaks=8)
+```
+1-2)
+```{r}
+set.seed(545)
+num_sim <- seq(100, 1000, by = 50)
+N <- 100
+n <- 40
+K <-20
+#theory
+mean <- n *(K/N)
+var <- n*(K/N)*((N-K)/N)*((N-n)/(N-1))
+
+#simulation
+means <- numeric(length(num_sim))
+variances <- numeric(length(num_sim))
+for (i in seq_along(num_sim)) {
+  samples <- rhyper(num_sim[i], 20,80,40)
+  means[i] <- mean(samples)
+  variances[i] <- var(samples)
+}
+
+# plot
+results <- data.frame(
+  num_sim,
+  means,
+  variances
+)
+plot(results$num_sim, results$means, type = "b", col = "blue",
+     ylim = range(c(results$means, mean)), 
+     main = "Simulated Mean VS Theoretical Mean",
+     xlab = "Number of Simulations", ylab = "Mean")
+abline(h = mean, col = "red", lty = 2)
+
+plot(results$num_sim, results$variances, type = "b", col = "blue",
+     ylim = range(c(results$variances, var)), 
+     main = "Simulated Variance VS Theoretical Variance",
+     xlab = "Number of Simulations", ylab = "Variance")
+abline(h = var, col = "red", lty = 2)
+
+
+```
+1-4)
+```{r}
+set.seed(545)
+num_sim <- 1000
+N <- 100
+m <- seq(from=40 ,to=100 ,by=20)
+
+samples <- list()
+for(i in seq_along(m)){
+  samples[[i]] <- rhyper(num_sim , m[i],N-m[i],40)
+  hist(samples[[i]],main="simulation",xlab = "Values")
+  label <- paste("m=",m[i])
+  legend("topright" ,legend=label)
+}
+
+```
+3-1)
+```{r}
+set.seed(545)
+lambda<- (1/15)
+n <- 1000
+exponential <- function(lambda, n) {
+  samples <- rexp(n,lambda) 
+  return(samples) 
+}
+samples <- exponential(lambda, n) 
+
+
+```
+3-2)
+```{r}
+set.seed(545)
+#function from last part
+lambda <- (0.067)
+n <- 100
+exponential <- function(lambda, n) {
+  samples <- rexp(n,lambda) 
+  return(samples) 
+}
+rexp_times <- exponential(0.067, 100) 
+
+arrival <- function(input_times, threshold) {
+  times <- input_times[input_times > threshold]
+  result <- times-threshold
+  return(result)
+}
+
+result <- arrival(rexp_times,12)
+
+
+
+```
+3-3)
+```{r}
+set.seed(545)
+
+lambda <- 1 / 15 
+m <- c(1000, 10000, 100000)
+
+for (i in m) {
+ 
+  rexp_times <- rexp(i,lambda)
+  time_after_12 <- rexp_times[rexp_times > 12]-12
+  
+  mean_time_after_12 <- mean(time_after_12)
+  cat("Mean time greater than 12 min for m=",i,":", mean_time_after_12, "\n")
+  mean_rexp_times <- mean(rexp_times)
+  cat("Mean time for m=",i,":", mean_rexp_times, "\n")
+  
+  hist(time_after_12, breaks = 30,main = paste("Histogram for m =", i))
+  hist(rexp_times, breaks = 30,main = paste("Histogram for m =", i))
+  
+}
+
+```
+4-1)
+```{r}
+set.seed(545)
+x <- runif(1000000,0,1)
+
+
+```
+4-2)
+```{r}
+set.seed(545)
+x <-runif(1000000,0,1)
+y <- -2*log(x)
+
+
+```
+4-3)
+```{r}
+set.seed(545)
+
+lambda <- 0.5  
+x <-runif(1000,0,1)
+y <- -2*log(x)
+
+y_value <- seq(0, max(y), length.out = 1000)
+pdf <- lambda * exp(-lambda * y_value)
+
+hist(y, breaks = 50, probability = TRUE, 
+     xlab = "Y", col = "lightblue")
+lines(y_value,pdf, col = "red", lwd = 2)
+  
+
+```
+4-4)
+```{r}
+set.seed(545)
+u1 <- runif(1000000,0,1)
+u2 <- runif(1000000,0,1)
+```
+4-5)
+```{r}
+set.seed(545)
+u1 <- runif(1000000,0,1)
+u2 <- runif(1000000,0,1)
+z1 <- sqrt(-2 * log(u1)) * cos(2 *pi* u2)
+z2 <- sqrt(-2 * log(u1)) * sin(2 *pi* u2)
+
+```
+4-6)
+```{r}
+set.seed(545)
+
+u1 <- runif(1000000,0,1)
+u2 <- runif(1000000,0,1)
+z1 <- sqrt(-2 * log(u1)) * cos(2 *pi* u2)
+z2 <- sqrt(-2 * log(u1)) * sin(2 *pi* u2)
+
+hist(z1, breaks = 60, probability = TRUE, col = "blue")
+curve((1 / sqrt(2 * pi)) * exp(-x^2 / 2), col="red",lwd = 2, add = TRUE)
+hist(z2, breaks = 60, probability = TRUE, col = "blue")
+curve((1 / sqrt(2 * pi)) * exp(-x^2 / 2), col="red",lwd = 2, add = TRUE)
+```
